@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}پروفایل{% endblock %}
+{% block content %}
+<div class="profile-card">
+    <h2>پروفایل کاربری</h2>
+    <p class="welcome">
+        خوش آمدی {{ user.first_name }} {{ user.last_name }} 👋
+    </p>
+    <ul class="profile-info">
+        <li>
+            <span class="label">شماره موبایل</span>
+            <span class="value">{{ user.phone_number }}</span>
+        </li>
+        <li>
+            <span class="label">ایمیل</span>
+            <span class="value">{{ user.email|default:"-" }}</span>
+        </li>
+    </ul>
+</div>
+{% endblock %}
