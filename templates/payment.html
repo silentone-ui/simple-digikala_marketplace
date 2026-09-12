@@ -2,12 +2,24 @@
 {% block title %}Payment | DijiKala{% endblock %}
 
 {% block content %}
-<h2>💳 Add Balance</h2>
+<div class="payment-container" style="max-width: 400px; margin: 0 auto;">
+    <h2 style="text-align: center;">💳 Add Balance</h2>
+    
+    <p style="text-align: center; color: #666;">Enter the amount you wish to add to your wallet.</p>
 
-<form action="{% url 'payment' %}" method="post" class="payment-form">
-    {% csrf_token %}
-    <label for="amount">Enter amount:</label>
-    <input type="number" name="amount" id="amount" min="1" required>
-    <button type="submit" class="btn">Add Balance</button>
-</form>
+    {# اصلاح مسیر URL از 'payment' به 'accounts:payment' #}
+    <form action="{% url 'accounts:payment' %}" method="post" class="payment-form" style="display: flex; flex-direction: column; gap: 15px;">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="amount" style="display: block; margin-bottom: 5px;">Amount ($):</label>
+            <input type="number" name="amount" id="amount" min="1" step="0.01" placeholder="e.g. 50.00" required 
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%; padding: 12px; cursor: pointer;">
+            Confirm & Add Balance
+        </button>
+    </form>
+</div>
 {% endblock %}

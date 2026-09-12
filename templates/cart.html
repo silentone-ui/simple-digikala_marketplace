@@ -20,18 +20,25 @@
                 <tr>
                     <td>{{ item.product.name }}</td>
                     <td>{{ item.product.store.name }}</td>
-                    <td>${{ item.product.price }}</td>
+                    <td>${{ item.price_at_addition }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td><a href="{% url 'remove_from_cart' item.id %}">❌</a></td>
+                    <td>
+                        <a href="{% url 'marketplace:remove_from_cart' item.id %}" class="remove-link">❌</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <p><strong>Total:</strong> ${{ total }}</p>
-    <a href="{% url 'checkout' %}" class="btn">✅ Checkout</a>
+    <div class="cart-summary">
+        <p><strong>Total:</strong> ${{ total }}</p>
+        <a href="{% url 'marketplace:checkout' %}" class="btn checkout-btn">✅ Checkout</a>
+    </div>
 
 {% else %}
-    <p>Your cart is empty.</p>
+    <div class="empty-cart">
+        <p>Your cart is empty.</p>
+        <a href="{% url 'marketplace:home' %}" class="btn">Go Shopping</a>
+    </div>
 {% endif %}
 {% endblock %}

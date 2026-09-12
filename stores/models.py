@@ -16,7 +16,7 @@ class Store(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True,verbose_name='تاریخ ایجاد')
-    updated_at = models.DateTimeField(auto_now=True,verbose_name='آخرین بریوز رسانی')
+    updated_at = models.DateTimeField(auto_now=True,verbose_name='آخرین بروز رسانی')
 
     def __str__(self):
         return self.name

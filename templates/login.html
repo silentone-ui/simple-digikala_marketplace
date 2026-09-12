@@ -2,24 +2,34 @@
 {% block title %}Login | DijiKala{% endblock %}
 
 {% block content %}
-<h2>🔐 Login</h2>
+<h2 style="text-align: center; margin-bottom: 20px;">🔐 Login</h2>
 
-<form method="post" class="auth-form">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    <div class="form-group">
-        <label for="id_username">Username</label>
-        {{ form.username }}
-    </div>
-    <div class="form-group">
-        <label for="id_password">Password</label>
-        {{ form.password }}
-    </div>
+<div style="display: flex; justify-content: center;">
+    <form method="post" class="auth-form" style="width: 100%; max-width: 400px;">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="errors" style="color: red; margin-bottom: 10px;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
 
-    <button type="submit" class="btn">Login</button>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="id_username" style="display: block;">Username</label>
+            {{ form.username }}
+        </div>
 
-    <p class="auth-link">Don't have an account? 
-        <a href="{% url 'accounts:signup' %}">Sign up</a>
-    </p>
-</form>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label for="id_password" style="display: block;">Password</label>
+            {{ form.password }}
+        </div>
+
+        <button type="submit" class="btn" style="width: 100%;">Login</button>
+
+        <p class="auth-link" style="margin-top: 20px; text-align: center;">
+            Don't have an account? 
+            <a href="{% url 'accounts:signup' %}">Sign up</a>
+        </p>
+    </form>
+</div>
 {% endblock %}

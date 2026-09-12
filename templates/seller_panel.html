@@ -2,16 +2,18 @@
 {% block title %}Seller Panel | DijiKala{% endblock %}
 
 {% block content %}
-<h2>👨‍💼 Seller Panel</h2>
+<h2 style="margin-bottom: 20px;">👨‍💼 Seller Panel</h2>
 
 {% if store %}
     <div class="card" style="max-width: 500px;">
         <h3>{{ store.name }}</h3>
         <p>{{ store.description|truncatewords:20 }}</p>
-        <a href="{% url 'store_detail' store.id %}" class="btn">Manage Store</a>
+        <a href="{% url 'stores:store_detail' store.id %}" class="btn">Manage Store</a>
     </div>
 {% else %}
-    <p>هنوز فروشگاهی نساختی.</p>
-    <a href="{% url 'create_store' %}" class="btn">+ Create New Store</a>
+    <div class="alert-info">
+        <p>هنوز فروشگاهی نساختی.</p>
+        <a href="{% url 'stores:create_store' %}" class="btn">+ Create New Store</a>
+    </div>
 {% endif %}
 {% endblock %}

@@ -78,6 +78,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES :dict = {}
 AUTH_USER_MODEL = 'accounts.User'
+LOGIN_URL = 'accounts.login'
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators

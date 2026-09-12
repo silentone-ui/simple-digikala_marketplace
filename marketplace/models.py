@@ -1,10 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-
-# ============================================================
-# مدل دسته‌بندی (Category)
-# ============================================================
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name='نام دسته بندی')
     slug = models.SlugField(unique=True, max_length=100, verbose_name='نامک')
@@ -18,11 +14,7 @@ class Category(models.Model):
         return self.name
 
 
-# ============================================================
-# مدل محصول (Product)
-# ============================================================
 class Product(models.Model):
-    # -------- کلید خارجی به دسته‌بندی --------
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
@@ -30,13 +22,11 @@ class Product(models.Model):
         verbose_name='دسته بندی',
     )
 
-    # -------- کلید خارجی به فروشگاه --------
-    # 👇 این فیلد جدید اضافه شد (به جای seller)
-    # چون هر محصول باید بدونه مال کدوم فروشگاهه
+ 
     store = models.ForeignKey(
-        'stores.Store',              # ← مسیر ماژول به صورت رشته
+        'stores.Store',      
         on_delete=models.CASCADE,
-        related_name='products',     # ← از طرف store: store.products.all()
+        related_name='products',    
         verbose_name='فروشگاه',
     )
 

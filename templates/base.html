@@ -15,18 +15,24 @@
             <div class="nav-left">
                 <a href="/" class="logo">🛍️ DijiKala</a>
             </div>
-             <div class="nav-right">
-                {% comment %} {% if user.is_authenticated %}
+            <div class="nav-right">
+                {% if user.is_authenticated %}
                     <a href="{% url 'accounts:profile' %}">
-                        👤 {{ user.profile.firstname|default:user.phone_number}}
+                        👤 {{ user.profile.first_name|default:user.phone_number }}
                     </a>
-                    <a href="{% url 'cart:cart_list' %}">🛒 Cart</a>
+                    <a href="{% url 'marketplace:cart' %}">🛒 Cart</a>
                     <a href="{% url 'accounts:logout' %}">Logout</a>
+                    
+                    {% if user.is_seller %}
+                        <span class="badge">Seller</span>
+                        <a href="{% url 'stores:seller_panel' %}">My Panel</a>
+                    {% endif %}
+
                 {% else %}
                     <a href="{% url 'accounts:login' %}">Login</a>
                     <a href="{% url 'accounts:signup' %}">Sign Up</a>
                     <a href="{% url 'create_store' %}">Create Store</a>
-                {% endif %} {% endcomment %}
+                {% endif %}
             </div> 
         </div>
     </nav>
@@ -34,6 +40,14 @@
     <!-- Page content -->
     <main>
         <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             {% block content %}
             {% endblock %}
         </div>

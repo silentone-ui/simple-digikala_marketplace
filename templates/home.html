@@ -4,27 +4,35 @@
 {% block title %}Home | DijiKala{% endblock %}
 
 {% block content %}
-<h2>🛒 Latest Products</h2>
+<h2 style="margin-bottom: 20px;">🛒 Latest Products</h2>
 <div class="card-grid">
     {% for product in products %}
         <div class="card">
             {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 100%; height: auto;">
             {% else %}
-                <img src="{% static 'images/default_product.jpg' %}" alt="No image">
+                <img src="{% static 'images/default_product.jpg' %}" alt="No image" style="width: 100%; height: auto;">
             {% endif %}
-            <h3>{{ product.name }}</h3>
-            <p>{{ product.description|truncatewords:12 }}</p>
-            <p><strong>${{ product.price }}</strong></p>
-            <a href="{% url 'product_detail' product.slug %}" class="btn">مشاهده محصول</a>
-            {% comment %} {% if user.is_authenticated %}
-                <a href="{% url 'add_to_cart' product.id %}" class="btn">Add to Cart</a>
-            {% else %} {% endcomment %}
-                {% comment %} <p><a href="{% url 'login' %}">Login to Buy</a></p>
-            {% endif %} {% endcomment %}
-        </div>
+            
+            <div class="card-body">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description|truncatewords:12 }}</p>
+                <p><strong style="color: #2ecc71;">${{ product.price }}</strong></p>
+                
+                <div class="card-actions" style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="{% url 'marketplace:product_detail' product.slug %}" class="btn">مشاهده محصول</a>
+                    
+                    {% if user.is_authenticated %}
+                        {# اصلاح نام URL بر اساس ساختار قبلی ما #}
+                        <a href="{% url 'marketplace:add_to_cart' product.id %}" class="btn btn-secondary">Add to Cart</a>
+                    {% else %}
+                        <p><a href="{% url 'login' %}">Login to Buy</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div> 
     {% empty %}
         <p>No products yet!</p>
     {% endfor %}
-</div>
+</div> 
 {% endblock %}
