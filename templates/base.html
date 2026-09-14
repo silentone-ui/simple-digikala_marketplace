@@ -12,11 +12,11 @@
    
 <div class="nav-right">
     {% if user.is_authenticated %}
-        <a href="{% url 'accounts:profile' %}">👤 {{ user.profile.first_name|default:user.phone_number }}</a>
+        <a href="{% url 'accounts:profile' %}">👤 {{ user.profile.full_name|default:user.phone_number }}</a>
         <a href="{% url 'marketplace:cart' %}">🛒 Cart</a>
         
         <div class="user-balance" style="display: inline-block; margin-left: 15px; margin-right: 15px;">
-            <span>موجودی: <strong>{{ user.profile.balance }} تومان</strong></span>
+            <span>موجودی: <strong>{{ user.balance }} تومان</strong></span>
             <a href="{% url 'marketplace:add_balance' %}" class="btn btn-sm">شارژ</a>
         </div>
 
@@ -35,7 +35,13 @@
         <a href="{% url 'stores:create_store' %}">Create Store</a>
     {% endif %}
 </div>
-
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
     <main>
         <div class="container">
             {% if messages %}

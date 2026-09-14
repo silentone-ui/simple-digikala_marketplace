@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.text import slugify
+from django.http import HttpResponseForbidden
 from .models import Store
 from .forms import StoreForm
+from marketplace.models import Category, Product 
 
 def store_list_view(request):
     stores = Store.objects.all()
@@ -25,7 +27,8 @@ def seller_panel_view(request):
     store = getattr(request.user, 'store', None)
     return render(request, 'seller_panel.html', {'store': store})
 
-login_required
+
+@login_required 
 def create_store_view(request):
     if hasattr(request.user, 'store'):
         return redirect('stores:seller_panel')
@@ -48,16 +51,18 @@ def create_store_view(request):
 
     return render(request, 'create_store.html', {'form': form})
 
+
 @login_required
 def add_product_view(request, store_id):
     store = get_object_or_404(Store, id=store_id)
 
     if store.owner != request.user:
-        return redirect('stores:seller_panel')
+        return HttpResponseForbidden("شما اجازه اضافه کردن محصول به این فروشگاه را ندارید.")
+
+    categories = Category.objects.all()
 
     if request.method == 'POST':
-        from marketplace.models import Category, Product
-
+        # دریافت داده‌ها از فرم
         name = request.POST.get('name')
         slug = request.POST.get('slug')
         description = request.POST.get('description', '')
@@ -81,8 +86,10 @@ def add_product_view(request, store_id):
                 image=image,
             )
             return redirect('stores:store_detail', store_id=store.id)
+        else:
 
-    categories = Category.objects.all()
+            pass
+
     return render(request, 'add_product.html', {
         'store': store,
         'categories': categories,
