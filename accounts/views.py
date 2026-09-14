@@ -1,20 +1,18 @@
-from django.shortcuts import render,redirect
-from django.contrib.auth import logout,login
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm,SignupForm
+from .forms import LoginForm, SignupForm
 
 
 def login_view(request):
-    if request.method=='POST':
+    if request.method == 'POST':
         form = LoginForm(data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request,user)
+            login(request, form.get_user())
             return redirect('accounts:profile')
     else:
         form = LoginForm()
-
-    return render(request,'login.html',{'form':form})
+    return render(request, 'login.html', {'form': form})
 
 
 def logout_view(request):
@@ -23,16 +21,15 @@ def logout_view(request):
 
 
 def signup_view(request):
-    if request.method=='POST':
+    if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request,user)
+            login(request, user)
             return redirect('accounts:profile')
     else:
         form = SignupForm()
-
-    return render(request,'signup.html',{'form':form})
+    return render(request, 'signup.html', {'form': form})
 
 
 @login_required
@@ -48,27 +45,16 @@ def customer_panel_view(request):
 @login_required
 def payment_view(request):
     if request.method == 'POST':
-        amount = request.POST.get('amount')
-        if amount:
-            request.user.balance += int(amount)
-            request.user.save()
-            return redirect('accounts:customer_panel')
-
-    return render(request, 'payment.html')
-
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-
-@login_required
-def payment_view(request):
-    if request.method == 'POST':
-        amount = int(request.POST.get('amount', 0))
-        if amount > 0:
+        try:
+            amount = int(request.POST.get('amount', 0))
+        except (TypeError, ValueError):
+            amount = 0
+        if 0 < amount <= 50_000_000: 
             request.user.balance += amount
-            request.user.save()
-            return redirect('accounts:profile')
+            request.user.save(update_fields=['balance'])
+            return redirect('accounts:customer_panel')
     return render(request, 'payment.html')
+
 
 @login_required
 def order_history_view(request):

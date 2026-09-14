@@ -23,10 +23,9 @@
                     <a href="{% url 'marketplace:product_detail' product.slug %}" class="btn">مشاهده محصول</a>
                     
                     {% if user.is_authenticated %}
-                        {# اصلاح نام URL بر اساس ساختار قبلی ما #}
                         <a href="{% url 'marketplace:add_to_cart' product.id %}" class="btn btn-secondary">Add to Cart</a>
                     {% else %}
-                        <p><a href="{% url 'login' %}">Login to Buy</a></p>
+                        <p><a href="{% url 'accounts:login' %}">Login to Buy</a></p>
                     {% endif %}
                 </div>
             </div>

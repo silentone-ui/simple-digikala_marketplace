@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config,Csv
+from decouple import config , Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES :dict = {}
 AUTH_USER_MODEL = 'accounts.User'
-LOGIN_URL = 'accounts.login'
+LOGIN_URL = 'accounts:login'
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators

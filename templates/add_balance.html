@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}افزایش موجودی{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin-top: 50px;">
+    <h2>کیف پول شما: {{ user.profile.balance }} تومان</h2>
+    <hr>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">پرداخت و افزایش موجودی</button>
+    </form>
+</div>
+{% endblock %}

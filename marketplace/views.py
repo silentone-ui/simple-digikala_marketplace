@@ -1,6 +1,9 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Product,Category,Cart,CartItem
+from .models import Product,Category,Cart,CartItem,Order,OrderItem
+from django.contrib import messages
+from .forms import AddBalanceForm
+from django.db import transaction
 
 
 
@@ -77,3 +80,63 @@ def checkout(request):
         'cart_items': cart.items.all(),
         'total': total,
     })
+
+def product_detail(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    return render(request, 'product_detail.html', {'product': product})
+
+
+@login_required
+def add_balance(request):
+    if request.method == 'POST':
+        form = AddBalanceForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            profile = request.user.profile
+            profile.balance += amount
+            profile.save()
+            messages.success(request, f"{amount} تومان به کیف پول شما اضافه شد.")
+            return redirect('marketplace:add_balance')
+    else:
+        form = AddBalanceForm()
+    
+    return render(request, 'add_balance.html', {'form': form})
+
+login_required
+def checkout(request):
+    cart = Cart.objects.filter(user=request.user).first()
+
+    if not cart:
+        messages.error(request, "سبد خرید شما پیدا نشد!")
+        return redirect('marketplace:product_list')
+
+    cart_items = CartItem.objects.filter(cart=cart)
+
+    if not cart_items.exists():
+        messages.error(request, "سبد خرید شما خالی است!")
+        return redirect('marketplace:product_list')
+
+    total_price = sum(item.product.price * item.quantity for item in cart_items)
+
+    if request.user.profile.balance < total_price:
+        messages.error(request, "موجودی کافی نیست! لطفا حساب خود را شارژ کنید.")
+        return redirect('marketplace:add_balance')
+
+
+    with transaction.atomic():
+    
+        order = Order.objects.create(user=request.user, total_price=total_price)
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                price=item.product.price,
+                quantity=item.quantity,
+            )
+
+        request.user.profile.balance -= total_price
+        request.user.profile.save()
+        cart_items.delete()
+
+    messages.success(request, "خرید با موفقیت انجام شد!")
+    return redirect('marketplace:product_list')

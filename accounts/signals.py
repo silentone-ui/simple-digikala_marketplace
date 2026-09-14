@@ -3,10 +3,8 @@ from django.dispatch import receiver
 from django.conf import settings
 from .models import Profile
 
-@receiver(post_save,sender=settings.AUTH_USER_MODEL)
-def create_profile(sender,instance,created,**kwargs):
-    full_name = f"{instance.first_name} {instance.last_name}".strip()
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance,full_name=full_name)
-    else:
-        Profile.objects.update_or_create(user=instance,defaults={'full_name':full_name})
+        full_name = f"{instance.first_name} {instance.last_name}".strip()
+        Profile.objects.create(user=instance, full_name=full_name)

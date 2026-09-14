@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}ایجاد فروشگاه جدید{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin-top: 50px; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <h2 style="margin-bottom: 20px; text-align: center;">ثبت فروشگاه جدید</h2>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%; margin-top: 20px;">ثبت نهایی</button>
+    </form>
+</div>
+{% endblock %}

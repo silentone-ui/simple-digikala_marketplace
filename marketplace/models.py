@@ -28,6 +28,7 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         related_name='products',    
         verbose_name='فروشگاه',
+    
     )
 
     name = models.CharField(max_length=255, verbose_name='نام محصول')
@@ -93,3 +94,21 @@ class CartItem(models.Model):
     @property
     def total_price(self):
         return self.product.price * self.quantity
+
+
+class Order(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"سفارش {self.id} برای {self.user.username}"
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.quantity} عدد"

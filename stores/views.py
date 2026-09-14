@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils.text import slugify
 from .models import Store
+from .forms import StoreForm
 
 def store_list_view(request):
     stores = Store.objects.all()
@@ -24,30 +25,28 @@ def seller_panel_view(request):
     store = getattr(request.user, 'store', None)
     return render(request, 'seller_panel.html', {'store': store})
 
-@login_required
+login_required
 def create_store_view(request):
     if hasattr(request.user, 'store'):
         return redirect('stores:seller_panel')
 
     if request.method == 'POST':
-        name = request.POST.get('name')
-        description = request.POST.get('description', '')
-        website = request.POST.get('website', '')
-
-        if name:
-            Store.objects.create(
-                name=name,
-                description=description,
-                website=website,
-                owner=request.user,
-            )
+        form = StoreForm(request.POST)
+        if form.is_valid():
+            store = form.save(commit=False)
+            store.owner = request.user
+            store.save()
+            
             request.user.is_seller = True
             request.user.save()
-
+            
             return redirect('stores:seller_panel')
+        else:
+            print(form.errors)
+    else:
+        form = StoreForm()
 
-    return render(request, 'create_store.html')
-
+    return render(request, 'create_store.html', {'form': form})
 
 @login_required
 def add_product_view(request, store_id):
