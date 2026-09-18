@@ -62,7 +62,6 @@ def add_product_view(request, store_id):
     categories = Category.objects.all()
 
     if request.method == 'POST':
-        # دریافت داده‌ها از فرم
         name = request.POST.get('name')
         slug = request.POST.get('slug')
         description = request.POST.get('description', '')
