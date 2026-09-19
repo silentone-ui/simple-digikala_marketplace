@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Product,Category,Cart,CartItem,Order,OrderItem
+from .models import *
 from django.contrib import messages
 from .forms import AddBalanceForm
 from django.db import transaction

@@ -10,3 +10,4 @@ urlpatterns = [
     path('create/',create_store_view, name='create_store'),
     path('add-product/<int:store_id>/',add_product_view, name='add_product'),
 ]
+

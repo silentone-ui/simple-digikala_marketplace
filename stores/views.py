@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.text import slugify
 from django.http import HttpResponseForbidden
 from .models import Store
-from .forms import StoreForm
+from .forms import StoreForm,ProductForm
 from marketplace.models import Category, Product 
 
 def store_list_view(request):
@@ -44,8 +44,6 @@ def create_store_view(request):
             request.user.save()
             
             return redirect('stores:seller_panel')
-        else:
-            print(form.errors)
     else:
         form = StoreForm()
 
@@ -57,39 +55,16 @@ def add_product_view(request, store_id):
     store = get_object_or_404(Store, id=store_id)
 
     if store.owner != request.user:
-        return HttpResponseForbidden("شما اجازه اضافه کردن محصول به این فروشگاه را ندارید.")
-
-    categories = Category.objects.all()
+        return HttpResponseForbidden("شما اجازه ندارید.")
 
     if request.method == 'POST':
-        name = request.POST.get('name')
-        slug = request.POST.get('slug')
-        description = request.POST.get('description', '')
-        price = request.POST.get('price')
-        stock = request.POST.get('stock', 0)
-        category_id = request.POST.get('category')
-        image = request.FILES.get('image')
-
-        if name and price and category_id:
-            category = get_object_or_404(Category, id=category_id)
-            final_slug = slug if slug else slugify(name)
-
-            Product.objects.create(
-                name=name,
-                slug=final_slug,
-                description=description,
-                price=price,
-                stock=stock,
-                category=category,
-                store=store,
-                image=image,
-            )
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.store = store 
+            product.save()
             return redirect('stores:store_detail', store_id=store.id)
-        else:
+    else:
+        form = ProductForm()
 
-            pass
-
-    return render(request, 'add_product.html', {
-        'store': store,
-        'categories': categories,
-    })
+    return render(request, 'add_product.html', {'store': store, 'form': form})
