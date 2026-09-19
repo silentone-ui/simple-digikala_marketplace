@@ -27,7 +27,7 @@
             <p><strong>${{ product.price }}</strong></p>
 
             {% if user.is_authenticated %}
-                <a href="{% url 'marketplace:add_to_cart' product.id %}" class="btn">Add to Cart</a>
+                <a href="{% url 'marketplace:add_to_cart' product.pk %}" class="btn">Add to Cart</a>
             {% else %}
                 <p><a href="{% url 'accounts:login' %}">Login to Buy</a></p>
             {% endif %}

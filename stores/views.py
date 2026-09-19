@@ -53,17 +53,16 @@ def create_store_view(request):
 @login_required
 def add_product_view(request, store_id):
     store = get_object_or_404(Store, id=store_id)
-
-    if store.owner != request.user:
-        return HttpResponseForbidden("شما اجازه ندارید.")
-
+    
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False)
             product.store = store 
             product.save()
-            return redirect('stores:store_detail', store_id=store.id)
+            return redirect('stores:store_detail', store_id=store.id) 
+        else:
+            print(form.errors)
     else:
         form = ProductForm()
 

@@ -4,50 +4,19 @@
 <div class="container mt-5">
     <h2>افزودن محصول جدید به {{ store.name }}</h2>
     <hr>
+
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            {{ form.errors }}
+        </div>
+    {% endif %}
+
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        
-        <div class="mb-3">
-            <label>نام محصول:</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
 
-        <div class="mb-3">
-            <label>Slug (آدرس محصول):</label>
-            <input type="text" name="slug" class="form-control">
-        </div>
+        {{ form.as_p }}
 
-        <div class="mb-3">
-            <label>توضیحات:</label>
-            <textarea name="description" class="form-control"></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label>قیمت:</label>
-            <input type="number" name="price" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-            <label>موجودی:</label>
-            <input type="number" name="stock" class="form-control" value="0">
-        </div>
-
-        <div class="mb-3">
-            <label>دسته‌بندی:</label>
-            <select name="category" class="form-control" required>
-                <option value="">انتخاب کنید...</option>
-                {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label>تصویر محصول:</label>
-            <input type="file" name="image" class="form-control">
-        </div>
-
-        <button type="submit" class="btn btn-primary">ثبت محصول</button>
+        <button type="submit" class="btn btn-primary mt-3">ثبت محصول</button>
     </form>
 </div>
 {% endblock %}
