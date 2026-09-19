@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, SignupForm
+from marketplace.models import *
 
 
 def login_view(request):
@@ -58,4 +59,5 @@ def payment_view(request):
 
 @login_required
 def order_history_view(request):
-    return render(request, 'order_history.html', {'orders': []})
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'order_history.html', {'orders': orders})
