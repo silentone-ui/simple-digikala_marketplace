@@ -59,34 +59,6 @@ def remove_from_cart(request, item_id):
     return redirect('marketplace:cart')
 
 @login_required
-def checkout(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    total = cart.total_price
-
-    if request.method == 'POST':
-        if request.user.balance >= total:
-            request.user.balance -= total
-            request.user.save()
-            cart.items.all().delete()
-            return redirect('accounts:customer_panel')
-        else:
-            return render(request, 'cart.html', {
-                'cart_items': cart.items.all(),
-                'total': total,
-                'error': 'موجودی کافی نیست',
-            })
-
-    return render(request, 'cart.html', {
-        'cart_items': cart.items.all(),
-        'total': total,
-    })
-
-def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-    return render(request, 'product_detail.html', {'product': product})
-
-
-@login_required
 def add_balance(request):
     if request.method == 'POST':
         form = AddBalanceForm(request.POST)
