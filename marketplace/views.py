@@ -11,12 +11,12 @@ def product_list(request):
     products = Product.objects.all()
     categories = Category.objects.all()
 
-    contex = {
+    context = {
         'products' :products,
         'categories' : categories,
     }
 
-    return render(request,'home.html',contex)
+    return render(request,'home.html',context)
 
 
 def product_detail(request, slug):

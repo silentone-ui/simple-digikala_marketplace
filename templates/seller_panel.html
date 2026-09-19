@@ -9,6 +9,13 @@
         <h3>{{ store.name }}</h3>
         <p>{{ store.description|truncatewords:20 }}</p>
         <a href="{% url 'stores:store_detail' store.id %}" class="btn">Manage Store</a>
+        <form method="POST" action="{% url 'stores:delete_store' store.id %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn" onclick="return confirm('آیا واقعاً می‌خواهی این فروشگاه را حذف کنی؟');" style="background-color: #dc3545; color: white; border: none; cursor: pointer;">
+                Delete Store
+            </button>
+        </form>
+        
     </div>
 {% else %}
     <div class="alert-info">

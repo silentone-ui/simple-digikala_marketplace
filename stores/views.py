@@ -68,3 +68,13 @@ def add_product_view(request, store_id):
         form = ProductForm()
 
     return render(request, 'add_product.html', {'store': store, 'form': form})
+
+
+@login_required
+def delete_store(request,store_id):
+    if request.method=='POST':
+        store = Store.objects.get(id=store_id)
+        store.delete()
+        return redirect('stores:create_store')
+
+    return render(request,'seller_panel.html')

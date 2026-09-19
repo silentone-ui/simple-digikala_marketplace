@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, SignupForm
-
+from django.utils.decorators import method_decorator
 
 def login_view(request):
     if request.method == 'POST':
