@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, SignupForm
-from marketplace.models import *
 
 
 def login_view(request):
@@ -42,22 +41,3 @@ def profile_view(request):
 def customer_panel_view(request):
     return render(request, 'customer_panel.html', {'customer': request.user})
 
-
-@login_required
-def payment_view(request):
-    if request.method == 'POST':
-        try:
-            amount = int(request.POST.get('amount', 0))
-        except (TypeError, ValueError):
-            amount = 0
-        if 0 < amount <= 50_000_000: 
-            request.user.balance += amount
-            request.user.save(update_fields=['balance'])
-            return redirect('accounts:customer_panel')
-    return render(request, 'payment.html')
-
-
-@login_required
-def order_history_view(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'order_history.html', {'orders': orders})

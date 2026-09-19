@@ -92,17 +92,16 @@ def add_balance(request):
         form = AddBalanceForm(request.POST)
         if form.is_valid():
             amount = form.cleaned_data['amount']
-            profile = request.user.profile
-            profile.balance += amount
-            profile.save()
-            messages.success(request, f"{amount} تومان به کیف پول شما اضافه شد.")
+            user = request.user
+            user.balance += amount
+            user.save(update_fields=['balance'])
             return redirect('marketplace:add_balance')
     else:
         form = AddBalanceForm()
     
     return render(request, 'add_balance.html', {'form': form})
 
-login_required
+@login_required
 def checkout(request):
     cart = Cart.objects.filter(user=request.user).first()
 
@@ -118,7 +117,7 @@ def checkout(request):
 
     total_price = sum(item.product.price * item.quantity for item in cart_items)
 
-    if request.user.profile.balance < total_price:
+    if request.user.balance < total_price:
         messages.error(request, "موجودی کافی نیست! لطفا حساب خود را شارژ کنید.")
         return redirect('marketplace:add_balance')
 
@@ -134,9 +133,16 @@ def checkout(request):
                 quantity=item.quantity,
             )
 
-        request.user.profile.balance -= total_price
-        request.user.profile.save()
+        request.user.balance -= total_price
+        request.user.save()
         cart_items.delete()
 
     messages.success(request, "خرید با موفقیت انجام شد!")
     return redirect('marketplace:product_list')
+
+
+
+@login_required
+def order_history_view(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'order_history.html', {'orders': orders})

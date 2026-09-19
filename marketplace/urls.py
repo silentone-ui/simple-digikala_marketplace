@@ -12,4 +12,5 @@ urlpatterns = [
     path('checkout/',checkout, name='checkout'),
     path('add-balance/',add_balance, name='add_balance'),
     path('checkout/',checkout, name='checkout'),
+    path('orders/',order_history_view, name='order_history'),
 ]
