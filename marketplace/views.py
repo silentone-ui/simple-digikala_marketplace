@@ -25,7 +25,7 @@ def product_detail(request, pk):
     context = {
         'product': product,
     }
-    return render(request, 'store_detail.html', context)
+    return render(request, 'product_detail.html', context)
 
 @login_required
 def cart_view(request):
